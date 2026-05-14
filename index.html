@@ -222,23 +222,50 @@
       .intro-copy p { margin: 24px 0 0; }
 
       .tags {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
+        position: relative;
+        overflow: hidden;
         margin-top: 32px;
-      }
-      .tag {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 13px 16px;
         border: 1px solid var(--soft-border);
         border-radius: 999px;
         background: var(--white);
+      }
+      .tags::before,
+      .tags::after {
+        content: "";
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        bottom: 0;
+        width: 56px;
+        pointer-events: none;
+      }
+      .tags::before { left: 0; background: linear-gradient(90deg, var(--white), transparent); }
+      .tags::after { right: 0; background: linear-gradient(270deg, var(--white), transparent); }
+      .tag-track {
+        display: flex;
+        width: max-content;
+        gap: 12px;
+        padding: 8px;
+        animation: tag-marquee 24s linear infinite;
+      }
+      .tags:hover .tag-track { animation-play-state: paused; }
+      .tag {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        background: var(--cream);
         color: rgba(0, 0, 0, 0.7);
         font-size: 14px;
+        white-space: nowrap;
       }
       .tag::before { content: "✓"; color: var(--green-3); }
+      @keyframes tag-marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+      }
 
       .services-section { background: var(--white); }
       .section-head { max-width: 920px; margin-bottom: 40px; }
@@ -368,7 +395,7 @@
         .section { padding: 64px 0; }
         .hero-content { padding-bottom: 48px; }
         .hero p.copy { font-size: 16px; }
-        .tags, .event-grid, .dark-grid, .community-grid, .process-grid, .cta-grid { grid-template-columns: 1fr; }
+        .event-grid, .dark-grid, .community-grid, .cta-grid { grid-template-columns: 1fr; }
         .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); border-radius: 24px; }
         .service-card { min-height: 220px; padding: 20px; }
         .service-top { margin-bottom: 20px; }
@@ -385,6 +412,21 @@
         .event-feature { min-height: 360px; }
         .event-image { min-height: 360px; }
         .dark-grid, .community-grid { gap: 32px; }
+        .process-grid {
+          display: flex;
+          gap: 14px;
+          overflow-x: auto;
+          padding: 2px 16px 18px 0;
+          margin-right: -16px;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+        }
+        .process-card {
+          flex: 0 0 min(78vw, 340px);
+          scroll-snap-align: start;
+        }
+        .process-grid::-webkit-scrollbar { height: 4px; }
+        .process-grid::-webkit-scrollbar-thumb { background: rgba(31, 46, 27, 0.22); border-radius: 999px; }
         .cta-copy { padding: 36px 24px; }
         .footer-inner { flex-direction: column; }
       }
@@ -434,7 +476,6 @@
         </video>
         <div class="hero-content">
           <div class="container">
-            <p class="eyebrow light">Lumina Bar Services</p>
             <h1 class="serif">Hatırlanmaya değer etkinlikler için kokteyller.</h1>
             <p class="copy">Lumina Bar’da Beyoğlu’nda yarattığımız kokteyl deneyimini; düğünlere, nişanlara, kurumsal etkinliklere ve özel davetlere taşıyoruz.</p>
             <div class="hero-actions">
@@ -449,15 +490,20 @@
         <div class="container">
           <figure class="intro-media"><img src="./bar-01.jpg" alt="Lumina Bar deneyimi" /></figure>
           <div class="intro-copy">
-            <p class="eyebrow">Lumina Bar Services</p>
             <h2 class="serif">Modern kokteyl bar kültürünü şık davetlerle buluşturuyoruz.</h2>
             <p>Profesyonel bar servisi, imza kokteyller ve etkinliğe özel konseptlerle misafirlerinize yalnızca içecek değil, hatırlanacak bir deneyim sunuyoruz.</p>
             <p>Beyoğlu’nda üç yıldır Lumina Bar’da kurduğumuz deneyimi, artık farklı mekanlara ve özel organizasyonlara taşıyoruz. Etkinliğin ruhuna uygun kokteyl menüleri, deneyimli bar ekibi ve özenli servis yaklaşımıyla davetinize güçlü bir atmosfer kazandırıyoruz.</p>
-            <div class="tags">
-              <div class="tag">İmza kokteyller</div>
-              <div class="tag">Deneyimli bar ekibi</div>
-              <div class="tag">Etkinliğe özel menü</div>
-              <div class="tag">Akıcı servis planı</div>
+            <div class="tags" aria-label="Lumina Bar Services özellikleri">
+              <div class="tag-track">
+                <div class="tag">İmza kokteyller</div>
+                <div class="tag">Deneyimli bar ekibi</div>
+                <div class="tag">Etkinliğe özel menü</div>
+                <div class="tag">Akıcı servis planı</div>
+                <div class="tag">İmza kokteyller</div>
+                <div class="tag">Deneyimli bar ekibi</div>
+                <div class="tag">Etkinliğe özel menü</div>
+                <div class="tag">Akıcı servis planı</div>
+              </div>
             </div>
           </div>
         </div>
@@ -488,7 +534,6 @@
           <div class="event-content">
             <h2 class="serif">Her davetin tonu farklıdır.</h2>
             <p>Bu yüzden menüyü yalnızca içecek listesi olarak değil, etkinliğin bir parçası olarak ele alıyoruz. Kokteyl menüsünden servis akışına, barmen ekibinden bar alanının görünümüne kadar her detayı etkinliğin karakterine göre planlıyoruz.</p>
-            <div class="info-box"><h3>Etkinliğe özel kokteyl deneyimi</h3><p>Düğünlerde daha romantik ve hafif reçeteler, kurumsal etkinliklerde daha rafine ve dengeli seçenekler, workshoplarda ise katılımcıların deneyimleyebileceği eğlenceli kokteyl kurguları hazırlıyoruz.</p></div>
           </div>
         </div>
       </section>
@@ -539,3 +584,4 @@
     <footer><div class="container footer-inner"><span>Lumina Bar Services</span><span>Beyoğlu / İstanbul</span><span>Bar Catering · Etkinlikler · Kokteyl Workshopları</span></div></footer>
   </body>
 </html>
+
